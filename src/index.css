@@ -1,0 +1,129 @@
+@import 'tailwindcss';
+
+/* Tailwind v4 is CSS-first: design tokens are declared here, not in a JS config. */
+@theme {
+  --color-bp-950: #071527;
+  --color-bp-900: #0b1c33;
+  --color-bp-850: #0d2040;
+  --color-bp-800: #10294f;
+  --color-bp-700: #16375f;
+  --color-bp-600: #1e4a7a;
+  --color-bp-accent: #38bdf8;
+
+  --color-shell-950: #0a0f1a;
+  --color-shell-900: #0f172a;
+  --color-shell-850: #141d33;
+  --color-shell-800: #1e293b;
+  --color-shell-700: #334155;
+  --color-shell-600: #475569;
+
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overscroll-behavior: none;
+  background: var(--color-shell-950);
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The canvas owns wheel + drag gestures; never let the page scroll or select. */
+canvas {
+  display: block;
+  touch-action: none;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Slim scrollbars for the sidebar / inspector panels. */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-shell-700) transparent;
+}
+.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-shell-700);
+  border-radius: 9999px;
+}
+.thin-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-shell-600);
+}
+
+/* Number inputs are drag-scrubbed; hide the native spinners. */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--color-shell-700);
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  margin-top: -5px;
+  height: 14px;
+  width: 14px;
+  border-radius: 9999px;
+  background: var(--color-bp-accent);
+  border: 2px solid var(--color-shell-900);
+}
+input[type='range']::-moz-range-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--color-shell-700);
+}
+input[type='range']::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border: 2px solid var(--color-shell-900);
+  border-radius: 9999px;
+  background: var(--color-bp-accent);
+}
+
+@keyframes bp-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: bp-fade-in 0.14s ease-out;
+}
