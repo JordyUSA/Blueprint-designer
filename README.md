@@ -36,15 +36,25 @@ are stored *parametrically* on it, so they travel with the wall when it moves.
 Doors render standard 90° swing arcs (with flippable hinge and swing) or as cased
 openings. Rooms are drag-drawn from eight presets and report their area live.
 
-**Furniture library** — 24 items across five categories, each drawn as a real
-vector plan symbol rather than a placeholder box. Drag from the sidebar onto the
-canvas or click a card to place it at the viewport centre. Sidebar thumbnails are
-rendered by the same draw routines used on the plan, so they can never drift.
+**Furniture library** — 80 items across five categories, each drawn as a real
+vector plan symbol rather than a placeholder box: sofas and recliners, beds from
+twin to king, cribs and bunks, dressers and closet systems, the full kitchen
+appliance set, double vanities, shower curtains, jacuzzis, washers and dryers,
+water heaters, HVAC plant, and straight, L-shaped and spiral stairs. Drag from
+the sidebar onto the canvas or click a card to place it at the viewport centre.
+Sidebar thumbnails are rendered by the same draw routines used on the plan, so
+they can never drift, and are painted lazily as cards scroll into view so the
+library stays cheap however large it grows.
 
 **Editing** — Selection with an 8-handle scale box and a rotation anchor,
 marquee multi-select, shift-click to extend, and an inspector for exact X/Y,
-width/height, angle, colour tint, and labels. Full undo/redo, JSON save/load, and
-PNG export at 1×/2×/4× with optional grid and a choice of theme.
+width/height, angle, colour tint, and labels. Full undo/redo and JSON save/load.
+
+**Export** — PNG at 1×/2×/4× with a choice of theme, an optional grid, an
+optional transparent background, and a **Show dimensions** toggle that drops wall
+lengths and room areas while keeping room names — a clean sheet for printing.
+The export toggle is independent of the on-canvas one, so you can work with
+dimensions visible and still export without them.
 
 **Units** — The document is always stored in feet; the status-bar toggle switches
 every readout between feet-inches and metres without touching the geometry.
@@ -84,7 +94,12 @@ src/
 │   ├── document.js       schema, entity factories, (de)serialization
 │   ├── reducer.js        document actions + undo/redo history
 │   └── useBlueprintStore.js  the store: what is React state vs. a ref
-├── data/                 furniture catalog + draw routines, room presets, template
+├── data/
+│   ├── furniture.js      the 80-item catalog: metadata, search, safety net
+│   ├── furnitureDraw.js  index assembling DRAWERS from the modules below
+│   ├── draw/             primitives.js + one module per category
+│   ├── roomPresets.js
+│   └── template.js       the pre-loaded apartment
 ├── hooks/                canvas sizing, rAF scheduling, keyboard shortcuts
 └── components/           toolbar, sidebar, inspector, status bar, canvas stage
 ```
@@ -104,6 +119,22 @@ cannot disagree.
 animation frame; the reducer is dispatched exactly once on `pointerup`. That keeps
 the canvas at 60 fps and collapses a drag into a single undo step. The renderer
 reads `docRef`, `viewRef`, and `draftRef`, never props.
+
+### The furniture symbol system
+
+`draw(ctx, env)` is called with the context already translated to the item's
+centre, rotated, and scaled so **1 unit = 1 foot** — so each symbol is written in
+plain feet in its own local space, and `env.lw` is one screen pixel in world
+units for strokes that should stay a constant weight at any zoom. Shared helpers
+(`hatch`, `drape`, `chairRing`, `dial`, `dashRect`, …) live in
+`src/data/draw/primitives.js`. Overhead items such as wall cabinets, range hoods
+and medicine cabinets are drawn **dashed**, the drafting convention for something
+above counter height rather than an obstruction on the floor.
+
+A catalog entry whose `kind` has no matching draw function falls back to a plain
+box rather than reaching the renderer as `undefined`, and a development-only
+check reports catalog/symbol mismatches in both directions — a catalog entry with
+no symbol, and a symbol nothing can reach.
 
 ### How walls are drawn
 

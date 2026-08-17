@@ -8,7 +8,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import { ChevronDown, ChevronRight, PanelLeftClose, Search, Sparkles, X } from 'lucide-react';
 import { Panel } from './ui/widgets.jsx';
 import { FurniturePreview } from './FurniturePreview.jsx';
-import { CATEGORIES, groupByCategory, searchFurniture } from '../data/furniture.js';
+import { FURNITURE_COUNT, groupByCategory, searchFurniture } from '../data/furniture.js';
 import { ROOM_PRESETS } from '../data/roomPresets.js';
 import { TOOLS } from './TopToolbar.jsx';
 import { TOOL_ROOM } from '../state/useBlueprintStore.js';
@@ -94,7 +94,9 @@ export const LeftSidebar = memo(function LeftSidebar({ store, onSpawn, onCollaps
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={tab === 'furniture' ? 'Search furniture…' : 'Search rooms…'}
+          placeholder={
+            tab === 'furniture' ? `Search ${FURNITURE_COUNT} items…` : 'Search rooms…'
+          }
           className="w-full rounded-lg border border-slate-700 bg-slate-950/60 py-1.5 pr-7 pl-7 text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-sky-500 focus:ring-1 focus:ring-sky-500/40"
         />
         {query ? (

@@ -29,6 +29,7 @@ export function renderToCanvas(doc, {
   themeId,
   scale = 2,
   includeGrid = false,
+  includeDimensions = true,
   paddingFeet = 2,
   units = 'imperial',
   transparent = false,
@@ -72,7 +73,7 @@ export function renderToCanvas(doc, {
     options: {
       grid: includeGrid,
       labels: true,
-      dimensions: true,
+      dimensions: includeDimensions,
       chrome: false, // never bake selection handles into an export
       vignette: false,
     },

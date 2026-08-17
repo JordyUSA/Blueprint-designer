@@ -13,6 +13,7 @@ import { docBounds } from '../state/document.js';
 export function ExportDialog({ store, onClose }) {
   const [scale, setScale] = useState(2);
   const [includeGrid, setIncludeGrid] = useState(false);
+  const [includeDimensions, setIncludeDimensions] = useState(true);
   const [themeId, setThemeId] = useState(store.themeId);
   const [transparent, setTransparent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -37,13 +38,14 @@ export function ExportDialog({ store, onClose }) {
       themeId,
       scale: 0.5,
       includeGrid,
+      includeDimensions,
       units: store.units,
       transparent,
     });
     canvas.className = 'max-h-full max-w-full object-contain rounded';
     canvas.style.maxHeight = '210px';
     host.replaceChildren(canvas);
-  }, [store.doc, store.units, themeId, includeGrid, transparent]);
+  }, [store.doc, store.units, themeId, includeGrid, includeDimensions, transparent]);
 
   const handleExport = async () => {
     setBusy(true);
@@ -52,6 +54,7 @@ export function ExportDialog({ store, onClose }) {
         themeId,
         scale,
         includeGrid,
+        includeDimensions,
         units: store.units,
         transparent,
       });
@@ -146,6 +149,12 @@ export function ExportDialog({ store, onClose }) {
           </div>
 
           <div className="space-y-0.5 border-t border-slate-800 pt-2">
+            <ToggleRow
+              label="Show dimensions"
+              hint="Wall lengths and room areas"
+              checked={includeDimensions}
+              onChange={setIncludeDimensions}
+            />
             <ToggleRow
               label="Include grid"
               hint="Keeps the measurement grid in the image"

@@ -186,14 +186,19 @@ function drawRooms(ctx, scene) {
     if (room.w * k < 54 || room.h * k < 30) continue;
     const cx = (room.x + room.w / 2) * k + view.panX;
     const cy = (room.y + room.h / 2) * k + view.panY;
-    drawHaloText(ctx, room.label, cx, cy - 7, theme, {
+    // The room name is a label; its area is a dimension. Export can drop the
+    // area while keeping the name, so they are gated separately.
+    const showArea = options.dimensions !== false;
+    drawHaloText(ctx, room.label, cx, showArea ? cy - 7 : cy, theme, {
       font: '600 13px ui-sans-serif, system-ui',
       color: theme.roomLabel,
     });
-    drawHaloText(ctx, formatArea(Math.abs(room.w * room.h), scene.units), cx, cy + 9, theme, {
-      font: '11px ui-sans-serif, system-ui',
-      color: theme.roomArea,
-    });
+    if (showArea) {
+      drawHaloText(ctx, formatArea(Math.abs(room.w * room.h), scene.units), cx, cy + 9, theme, {
+        font: '11px ui-sans-serif, system-ui',
+        color: theme.roomArea,
+      });
+    }
   }
 }
 
